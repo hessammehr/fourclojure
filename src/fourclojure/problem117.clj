@@ -3,7 +3,6 @@
 (defn print-maze [maze]
   (print (interpose \newline maze)))
 
-
 (defn parse-maze [maze]
   (vec (map vec maze)))
 
@@ -28,7 +27,6 @@
     (assoc-in maze pos to)
     maze))
 
-
 (defn evolve [maze]
   (let [ms (find-pos maze \M)
         edges (mapcat #(neighbors maze %) ms)]
@@ -36,9 +34,6 @@
 
 (defn moves [maze]
   (take-while #(seq (find-pos % \M)) (iterate evolve maze)))
-
-(defn done? [maze]
-  (empty? (find-pos maze \C)))
 
 (defn solvable? [maze]
   (if (seq (find-pos (last (moves maze)) \C))
@@ -58,16 +53,16 @@
                               "########"]))))
 
 (assert (= true (solvable? (parse-maze [
-                                         "########"
-                                         "#M  #  #"
-                                         "#   #  #"
-                                         "# #    #"
-                                         "#   #  #"
-                                         "#  #   #"
-                                         "#  # # #"
-                                         "#  #   #"
-                                         "#  #  C#"
-                                         "########"]))))
+                             "########"
+                             "#M  #  #"
+                             "#   #  #"
+                             "# #    #"
+                             "#   #  #"
+                             "#  #   #"
+                             "#  # # #"
+                             "#  #   #"
+                             "#  #  C#"
+                             "########"]))))
 
 
 
