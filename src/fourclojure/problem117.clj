@@ -1,7 +1,5 @@
 (ns fourclojure.problem-117)
 
-
-
 (defn print-maze [maze]
   (print (interpose \newline maze)))
 
@@ -26,40 +24,50 @@
             candidates)))
 
 (defn flip [maze pos from to]
-  (if (= (get-in maze pos) from)
-         (assoc-in maze pos to)
-         maze))
-
-;(defn solve [maze]
-;  (loop [maze maze mice (find-pos m \M) cheese (find-pos m \C)]
-;    (if-not (seq cheese)
-;      true)
-;    ))
-
+  (if (contains? from (get-in maze pos))
+    (assoc-in maze pos to)
+    maze))
 
 
 (defn evolve [maze]
   (let [ms (find-pos maze \M)
-        edge (mapcat #(neighbors maze %) ms)]
-    ;(reduce #(flip maze % \M \X) maze ms)
-         (println ms edge)
-    ))
+        edges (mapcat #(neighbors maze %) ms)]
+    (reduce #(flip %1 %2 #{\space \C} \M) (reduce #(flip %1 %2 #{\M} \X) maze ms) edges)))
+
+(defn moves [maze]
+  (take-while #(seq (find-pos % \M)) (iterate evolve maze)))
+
+(defn done? [maze]
+  (empty? (find-pos maze \C)))
+
+(defn solvable? [maze]
+  (if (seq (find-pos (last (moves maze)) \C))
+    false
+    true))
+
+(assert (= false (solvable? (parse-maze [
+                              "########"
+                              "#M  #  #"
+                              "#   #  #"
+                              "# # #  #"
+                              "#   #  #"
+                              "#  #   #"
+                              "#  # # #"
+                              "#  #   #"
+                              "#  #  C#"
+                              "########"]))))
+
+(assert (= true (solvable? (parse-maze [
+                                         "########"
+                                         "#M  #  #"
+                                         "#   #  #"
+                                         "# #    #"
+                                         "#   #  #"
+                                         "#  #   #"
+                                         "#  # # #"
+                                         "#  #   #"
+                                         "#  #  C#"
+                                         "########"]))))
 
 
-(def m (parse-maze ["########"
-                    "#M  #  #"
-                    "#   #  #"
-                    "# # #  #"
-                    "#   #  #"
-                    "#  #   #"
-                    "#  # # #"
-                    "#  #   #"
-                    "#  #  C#"
-                    "########"]))
-
-;(defn parse-maze [lines]
-;  {:get (fn [r c])}
-;  (defn parse-line [line]
-;    )
-;  (mapcat ))
 
