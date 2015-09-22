@@ -1,7 +1,7 @@
 (ns fourclojure.problem73)
 
 (def b1 [[:e :x :e]
-         [:o :o :o]
+         [:o :e :o]
          [:x :e :x]])
 
 (defn positions [board x]
@@ -23,4 +23,5 @@
   (let [p (positions board player)]
     (some #(clojure.set/subset? % p) winning)))
 
-(when-some)
+(defn winner [board]
+  (keep #(when (wins? board %) %) [:x :o]))
